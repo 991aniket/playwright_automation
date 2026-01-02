@@ -7,6 +7,9 @@ test("🛒 Add To Cart – Validate Product Selection & Cart Addition Flow", asy
     const passwordInputField = page.locator("#userPassword");
     const loginButtonCTA = page.locator("#login");
     const productCardElements = page.locator(".card-body");
+    const cartCta = page.locator("[routerlink*='cart']");
+    const toastMessage = page.locator("[class*='toast-message']");
+
 
     // 🔹 Expected Product Details
     const expectedProductName = "iphone 13 pro";
@@ -38,18 +41,25 @@ test("🛒 Add To Cart – Validate Product Selection & Cart Addition Flow", asy
 
         // Match product
         if (currentProductName === expectedProductName) {
-            
+
             console.log(`🎯 Match Found → ${currentProductName}`);
             console.log("🛍️  Adding product to cart...");
 
             // Click Add To Cart for matched product
             await productCardElements.nth(index).locator("text= Add To Cart").click();
 
+            const messageText = await toastMessage.textContent();
+            console.log("📢 Toast Message:", messageText);
+            expect(messageText).toContain("Product Added To Cart");
+
             console.log("✅ Product Successfully Added To Cart:", currentProductName);
 
             // Once product is found no need to continue loop
             break;
         }
+
+        await cartCta.click();
+
     }
 });
 
