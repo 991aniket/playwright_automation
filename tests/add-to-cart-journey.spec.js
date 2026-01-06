@@ -1,73 +1,63 @@
 import { test, expect } from '@playwright/test';
 
-test("🛒 Add To Cart – Validate Product Selection & Cart Addition Flow", async ({ page }) => {
+test('Add product to cart and verify success message', async ({ page }) => {
 
     // 🔹 Locators
-    const emailInputField = page.locator("#userEmail");
-    const passwordInputField = page.locator("#userPassword");
-    const loginButtonCTA = page.locator("#login");
-    const productCardElements = page.locator(".card-body");
-    const cartCta = page.locator("[routerlink*='cart']");
-    const toastMessage = page.locator("[class*='toast-message']");
+    const emailInput = page.locator('#userEmail');
+    const passwordInput = page.locator('#userPassword');
+    const loginButton = page.locator('#login');
+    const productCards = page.locator('.card-body');
+    const cartButton = page.locator("[routerlink*='cart']");
+    const toastNotification = page.locator("[class*='toast-message']");
 
+    // 🔹 Test Data
+    const targetProductName = 'iphone 13 pro';
+    let productPriceText;
 
-    // 🔹 Expected Product Details
-    const expectedProductName = "iphone 13 pro";
-    const expectedProductPrice = "$ 55000";
+    console.log('➡️ Navigating to login page');
+    await page.goto('https://rahulshettyacademy.com/client/#/auth/login');
 
-    console.log("🔄 Navigating to Login Page...");
-    await page.goto("https://rahulshettyacademy.com/client/#/auth/login");
+    console.log('➡️ Logging in with valid credentials');
+    await emailInput.fill('testing.automation.991@gmail.com');
+    await passwordInput.fill('Learning@123');
+    await loginButton.click();
 
-    console.log("✔️ Entering valid credentials...");
-    await emailInputField.fill("testing.automation.991@gmail.com");
-    await passwordInputField.fill("Learning@123");
+    console.log('⏳ Waiting for products to load');
+    await productCards.first().waitFor();
 
-    console.log("👉 Clicking Login...");
-    await loginButtonCTA.click();
+    const productCount = await productCards.count();
+    console.log(`📦 Total products displayed: ${productCount}`);
 
-    console.log("⏳ Waiting for product cards to load...");
-    // wait until at least first product is visible
-    await productCardElements.first().waitFor();
+    // 🔍 Search product and add to cart
+    for (let i = 0; i < productCount; i++) {
 
-    console.log("📦 Fetching total available product cards...");
-    const totalProducts = await productCardElements.count();
-    console.log("🧮 Total Product Cards Found →", totalProducts);
+        const productName = await productCards.nth(i).locator('b').textContent();
 
-    // 🔍 Loop through product list
-    for (let index = 0; index < totalProducts; index++) {
+        if (productName === targetProductName) {
 
-        // Fetch name of each product
-        const currentProductName = await productCardElements.nth(index).locator("b").textContent();
+            productPriceText = await productCards
+                .nth(i)
+                .locator('.text-muted')
+                .textContent();
 
-        // Match product
-        if (currentProductName === expectedProductName) {
+            console.log(`🎯 Product found: ${productName}`);
+            console.log(`💰 Product price: ${productPriceText}`);
 
-            console.log(`🎯 Match Found → ${currentProductName}`);
-            console.log("🛍️  Adding product to cart...");
+            await productCards
+                .nth(i)
+                .locator('text= Add To Cart')
+                .click();
 
-            // Click Add To Cart for matched product
-            await productCardElements.nth(index).locator("text= Add To Cart").click();
+            const toastText = await toastNotification.textContent();
+            console.log(`📢 Toast message: ${toastText}`);
 
-            const messageText = await toastMessage.textContent();
-            console.log("📢 Toast Message:", messageText);
-            expect(messageText).toContain("Product Added To Cart");
+            expect(toastText).toContain('Product Added To Cart');
 
-            console.log("✅ Product Successfully Added To Cart:", currentProductName);
-
-            // Once product is found no need to continue loop
+            console.log('✅ Product successfully added to cart');
             break;
         }
-
-        await cartCta.click();
-
     }
-});
 
-/**
- 🔥 NOTES
- ------------------------------------
- ✅ We used `.first().waitFor()` to ensure product cards are loaded
- ✅ `.count()` → gives total number of product cards
- ✅ Loop is used to compare each product name
- ✅ Once target product found → click Add To Cart → break loop
-*/
+    console.log('🛒 Navigating to cart');
+    await cartButton.click();
+});
