@@ -29,7 +29,9 @@ reporter: 'html',
         // which browser to use we can define here 
 
         browserName :'chromium',
-        headless:false
+        headless:false,
+        screenshot:'only-on-failure',
+        trace:'on-all-retries',
   },
 });
 
