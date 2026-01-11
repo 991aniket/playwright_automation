@@ -326,46 +326,46 @@ for (let i = 0; i < totalOrders; i++) {
     }
 }
 
-// 🔹 Step 1: Wait for Order Confirmation Page
+// 🔹 Wait for Order Confirmation Page
 await orderSuccessMessage.waitFor();
 console.log("✅ Order details page loaded");
 
-// 🔹 Step 2: Verify success message
+// 🔹 Verify success message
 await expect(
     orderSuccessMessage,
     "❌ Order confirmation message is incorrect or missing"
 ).toHaveText("Thank you for Shopping With Us");
 console.log("✅ Order confirmation message verified");
 
-// 🔹 Step 3: Verify Order Number
+// 🔹 Verify Order Number
 await expect(
     orderId,
     "❌ Order number not displayed or does not match"
 ).toHaveText(orderNumber);
 console.log(`✅ Order number verified: ${orderNumber}`);
 
-// 🔹 Step 4: Verify User Email in delivery address
+// 🔹 Verify User Email in delivery address
 await expect(
     userEmailText,
     "❌ User email not found in delivery address"
 ).toHaveText(userEmail);
 console.log("✅ User email verified in address section");
 
-// 🔹 Step 5: Verify Country
+// 🔹  Verify Country
 await expect(
     countryText,
     "❌ Country value is missing or incorrect"
 ).toContainText("India");
 console.log("✅ Country verified as India");
 
-// 🔹 Step 6: Verify Product Name
+// 🔹 Verify Product Name
 await expect(
     productTitle,
     "❌ Product name does not match on order details page"
 ).toHaveText(targetProductName);
 console.log("✅ Product name verified");
 
-// 🔹 Step 7: Verify Product Price
+// 🔹 Verify Product Price
 await expect(
     productPriceText,
     "❌ Product price does not match on order details page"
