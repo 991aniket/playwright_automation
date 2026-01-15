@@ -57,17 +57,17 @@ test('🛒 Add product to cart and verify checkout flow', async ({ page }) => {
 
     //Order History 
     const ordersTableRows = page.locator("tbody tr");
-    
+
     //
 
     // 🔹 Locators
-const orderSuccessMessage = page.locator("[class='tagline']").nth(0);
-const orderId = page.locator("[class='col-text -main']");
-const deliveryAddressSection = page.locator(".address").nth(1);
-const userEmailText = deliveryAddressSection.locator("[class='text']").nth(0);
-const countryText = deliveryAddressSection.locator("[class='text']").nth(1);
-const productTitle = page.locator(".artwork-card-info [class='title']");
-const productPriceText = page.locator(".artwork-card-info [class='info']");
+    const orderSuccessMessage = page.locator("[class='tagline']").nth(0);
+    const orderId = page.locator("[class='col-text -main']");
+    const deliveryAddressSection = page.locator(".address").nth(1);
+    const userEmailText = deliveryAddressSection.locator("[class='text']").nth(0);
+    const countryText = deliveryAddressSection.locator("[class='text']").nth(1);
+    const productTitle = page.locator(".artwork-card-info [class='title']");
+    const productPriceText = page.locator(".artwork-card-info [class='info']");
 
     // 🔹 Test Data
     const targetProductName = 'iphone 13 pro';
@@ -266,111 +266,113 @@ const productPriceText = page.locator(".artwork-card-info [class='info']");
     console.log('📜 Navigating to order history');
     await orderHistoryButton.click();
 
- // 🔹 Wait for Orders page to be visible
-await page.locator("h1:has-text('Your Orders')").waitFor();
-console.log("✅ Orders page loaded");
+    // 🔹 Wait for Orders page to be visible
+    await page.locator("h1:has-text('Your Orders')").waitFor();
+    console.log("✅ Orders page loaded");
 
-// 🔹 Get total number of orders
-const totalOrders = await ordersTableRows.count();
-console.log(`📦 Total orders found: ${totalOrders}`);
+    // 🔹 Get total number of orders
+    const totalOrders = await ordersTableRows.count();
+    console.log(`📦 Total orders found: ${totalOrders}`);
 
-// 🔹 Handle case when no orders are present
-if (totalOrders === 0) {
-    console.log("⚠️ No orders available in Orders table");
-}
-
-// 🔹 Loop through each order row
-for (let i = 0; i < totalOrders; i++) {
-
-    console.log(`🔍 Checking order row index: ${i}`);
-
-    // 🔹 Fetch Order ID from current row
-    const rowOrderId = await ordersTableRows
-        .nth(i)
-        .locator("th")
-        .textContent();
-
-    console.log(`🆔 Order ID found: ${rowOrderId}`);
-
-    // 🔹 Match Order ID
-    if (rowOrderId && orderNumber.includes(rowOrderId)) 
-        {
-
-        console.log(`✅ Matching Order ID found: ${rowOrderId}`);
-
-        // 🔹 Validate product name
-        await expect(
-            ordersTableRows.nth(i).locator("td").nth(1),
-            `❌ Product name mismatch for Order ID: ${rowOrderId}`
-        ).toHaveText(targetProductName);
-
-        console.log("✅ Product name validated");
-
-        // 🔹 Validate product price
-        await expect(
-            ordersTableRows.nth(i).locator("td").nth(2),
-            `❌ Product price mismatch for Order ID: ${rowOrderId}`
-        ).toHaveText(selectedProductPrice);
-
-        console.log("✅ Product price validated");
-
-        // 🔹 Click View button
-        console.log("👉 Clicking on View button");
-        await ordersTableRows
-            .nth(i)
-            .locator("button:has-text('View')")
-            .click();
-
-        console.log("✅ Order Details successful validation");
-        break;
+    // 🔹 Handle case when no orders are present
+    if (totalOrders === 0) {
+        console.log("⚠️ No orders available in Orders table");
     }
-}
 
-// 🔹 Wait for Order Confirmation Page
-await orderSuccessMessage.waitFor();
-console.log("✅ Order details page loaded");
+    // 🔹 Loop through each order row
+    for (let i = 0; i < totalOrders; i++) {
 
-// 🔹 Verify success message
-await expect(
-    orderSuccessMessage,
-    "❌ Order confirmation message is incorrect or missing"
-).toHaveText("Thank you for Shopping With Us");
-console.log("✅ Order confirmation message verified");
+        console.log(`🔍 Checking order row index: ${i}`);
 
-// 🔹 Verify Order Number
-await expect(
-    orderId,
-    "❌ Order number not displayed or does not match"
-).toHaveText(orderNumber);
-console.log(`✅ Order number verified: ${orderNumber}`);
+        // 🔹 Fetch Order ID from current row
+        const rowOrderId = await ordersTableRows
+            .nth(i)
+            .locator("th")
+            .textContent();
 
-// 🔹 Verify User Email in delivery address
-await expect(
-    userEmailText,
-    "❌ User email not found in delivery address"
-).toHaveText(userEmail);
-console.log("✅ User email verified in address section");
+        console.log(`🆔 Order ID found: ${rowOrderId}`);
 
-// 🔹  Verify Country
-await expect(
-    countryText,
-    "❌ Country value is missing or incorrect"
-).toContainText("India");
-console.log("✅ Country verified as India");
+        // 🔹 Match Order ID
+        if (rowOrderId && orderNumber.includes(rowOrderId)) {
 
-// 🔹 Verify Product Name
-await expect(
-    productTitle,
-    "❌ Product name does not match on order details page"
-).toHaveText(targetProductName);
-console.log("✅ Product name verified");
+            console.log(`✅ Matching Order ID found: ${rowOrderId}`);
 
-// 🔹 Verify Product Price
-await expect(
-    productPriceText,
-    "❌ Product price does not match on order details page"
-).toContainText(selectedProductPrice);
-console.log("✅ Product price verified");
+            // 🔹 Validate product name
+            await expect(
+                ordersTableRows.nth(i).locator("td").nth(1),
+                `❌ Product name mismatch for Order ID: ${rowOrderId}`
+            ).toHaveText(targetProductName);
+
+            console.log("✅ Product name validated");
+
+            // 🔹 Validate product price
+            await expect(
+                ordersTableRows.nth(i).locator("td").nth(2),
+                `❌ Product price mismatch for Order ID: ${rowOrderId}`
+            ).toHaveText(selectedProductPrice);
+
+            console.log("✅ Product price validated");
+
+            // 🔹 Click View button
+            console.log("👉 Clicking on View button");
+            await ordersTableRows
+                .nth(i)
+                .locator("button:has-text('View')")
+                .click();
+
+            console.log("✅ Order Details successful validation");
+            break;
+        }
+    }
+
+    // 🔹 Wait for Order Confirmation Page
+    await orderSuccessMessage.waitFor();
+    console.log("✅ Order details page loaded");
+
+    // 🔹 Verify success message
+    await expect(
+        orderSuccessMessage,
+        "❌ Order confirmation message is incorrect or missing"
+    ).toHaveText("Thank you for Shopping With Us");
+    console.log("✅ Order confirmation message verified");
+
+    // 🔹 Verify Order Number
+    await expect(
+        orderId,
+        "❌ Order number not displayed or does not match"
+    ).toHaveText(orderNumber);
+    console.log(`✅ Order number verified: ${orderNumber}`);
+
+    // 🔹 Verify User Email in delivery address
+    await expect(
+        userEmailText,
+        "❌ User email not found in delivery address"
+    ).toHaveText(userEmail);
+    console.log("✅ User email verified in address section");
+
+    // 🔹  Verify Country
+    await expect(
+        countryText,
+        "❌ Country value is missing or incorrect"
+    ).toContainText("India");
+    console.log("✅ Country verified as India");
+
+    // 🔹 Verify Product Name
+    await expect(
+        productTitle,
+        "❌ Product name does not match on order details page"
+    ).toHaveText(targetProductName);
+    console.log("✅ Product name verified");
+
+    // 🔹 Verify Product Price
+    await expect(
+        productPriceText,
+        "❌ Product price does not match on order details page"
+    ).toContainText(selectedProductPrice);
+    console.log("✅ Product price verified");
 
     console.log('🏁 Test Completed Successfully 🎉');
 });
+
+
+//https://rahulshettyacademy.com/angularpractice/
