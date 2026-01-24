@@ -31,7 +31,7 @@ reporter: 'html',
         browserName :'chromium',
         headless:false,
         screenshot:'only-on-failure',
-        trace:'on-all-retries',
+        trace:'retain-on-failure',
   },
 });
 
