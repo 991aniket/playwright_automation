@@ -31,7 +31,7 @@ test("Verify browser navigation using back and forward actions", async ({ page }
     expect(forwardTitle).toContain("LeetCode");
 });
 
-test.only("Verify visibility toggle of textbox using hide button", async ({ page }) => {
+test("Verify visibility toggle of textbox using hide button", async ({ page }) => {
 
     // Step 1: Navigate to Rahul Shetty Academy practice page
     console.log("➡️  Opening Rahul Shetty Academy Automation Practice page");

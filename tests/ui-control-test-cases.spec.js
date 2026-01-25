@@ -103,7 +103,7 @@ test("UI → Select & Unselect Checkbox Validation", async ({ page }) => {
  * Test 4 — Verify Blinking Text Attribute
  * ================================
  */
-test.only("UI → Verify Blinking Text Attribute on Page", async ({ page }) => {
+test("UI → Verify Blinking Text Attribute on Page", async ({ page }) => {
 
   const blinkingDocumentLink = page.locator("[href*='documents-request']");
 
