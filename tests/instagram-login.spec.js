@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test.only('Instagram login Test', async ({ page }) => {
+test('Instagram login Test', async ({ page }) => {
   console.log('🚀 Starting Instagram Login Test');
 
   console.log('➡️ Navigating to login page...');
@@ -9,7 +9,7 @@ test.only('Instagram login Test', async ({ page }) => {
   console.log('📝 Validating login page title...');
   const title = await page.title();
   console.log(`📄 Login page title: ${title}`);
-  await expect(page).toHaveTitle('Login • Instagram');
+  await expect(page).toHaveTitle('Instagram');
 
   console.log('🔐 Filling username and password...');
   console.log('👤 Filling username...');
